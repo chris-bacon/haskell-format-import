@@ -38,15 +38,15 @@ padMissingQualified :: String
 padMissingQualified = take qualifiedPadLength $ repeat ' '
 
 moduleNameRegex :: Regex
-moduleNameRegex = mkRegex "^[import]+\\s[qualified]*\\s*(\\w+\\.*\\w*)"
+moduleNameRegex = mkRegex "^import\\s[qualified]*\\s*([[:alpha:][:punct:]]+)"
 
 getLongestModuleName :: [(LineNumber, String)] -> Int
-getLongestModuleName xs = maximum $ fmap (getLengthOfModuleName . snd) xs
+getLongestModuleName xs 
+  = maximum $ fmap (fromMaybe 0 . getLengthOfModuleName . snd) xs
 
 formatImportLine :: Buffer -> Qualification -> MaxLineLength -> Int -> (LineNumber, String) -> Neovim env ()
-formatImportLine buff qualifiedImports (MaxLineLength longestImport) longestModuleName (lineNo, lineContent) = 
-    let paddedContent = padContent lineContent qualifiedImports longestImport longestModuleName
-     in buffer_set_line buff (intToInt64 lineNo) paddedContent
+formatImportLine buff qualifiedImports (MaxLineLength longestImport) longestModuleName (lineNo, lineContent) 
+  = buffer_set_line buff (intToInt64 lineNo) $ padContent lineContent qualifiedImports longestImport longestModuleName
 
 getQualification :: [(LineNumber, String)] -> Qualification
 getQualification xs = go $ filter isQualified xs
@@ -61,14 +61,20 @@ padContent content Present longestImport longestModuleName =
      then padAs longestModuleName content
      else padAs longestModuleName $ concat $ ("import" ++ padMissingQualified) : splitOn "import" content
 
-getLengthOfModuleName :: String -> Int
-getLengthOfModuleName = length . concat . fromJust . matchRegex moduleNameRegex
+getLengthOfModuleName :: String -> Maybe Int
+getLengthOfModuleName s = do
+    let match = matchRegex moduleNameRegex s
+    case match of
+      Just m  -> return $ length .concat $ m
+      Nothing -> error $ s ++ " does not match the import regex!"
+                           ++ " Please raise an issue on the github page"
+                           ++ " quoting what statement it failed on"
 
 padAs :: Int -> String -> String
 padAs n s =
-    let lenModName = getLengthOfModuleName s
+    let lenModName = fromMaybe 0 $ getLengthOfModuleName s
         padDiff    = n - lenModName 
-     in mconcat . intersperse (take padDiff (repeat ' ') ++ "as") $ splitOn "as" s
+     in mconcat . intersperse (take padDiff (repeat ' ') ++ " as ") $ splitOn " as " s
 
 sortImports :: [(LineNumber, String)] -> [(LineNumber, String)]
 sortImports xs = zip (fmap fst xs) $ sortBy (\a b -> compare (toLower <$> ignoreQualified a) (toLower <$> ignoreQualified b)) (fmap snd xs)
