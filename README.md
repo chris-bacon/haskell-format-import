@@ -27,3 +27,6 @@ main = do
     }
 ```
 
+## Usage
+
+This plugin exposes the `HaskellFormatImport` command which you could map some keybinding to, or invoke directly.
