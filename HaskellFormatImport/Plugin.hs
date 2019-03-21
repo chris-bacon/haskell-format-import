@@ -19,15 +19,19 @@ newtype MaxLineLength = MaxLineLength Int
 
 newtype LineNumber = LineNumber Int
 
+newtype ImportStatement = ImportStatement { unImportStatement :: String } deriving (Eq, Ord)
+
 instance Enum LineNumber where
   toEnum                  = LineNumber
   fromEnum (LineNumber a) = fromEnum a
 
-moduleNameRegex :: Regex
+moduleNameRegex, importRegex :: Regex
 moduleNameRegex = mkRegex "^import\\s[qualified]*\\s*([[:alpha:][:punct:]]+)"
+importRegex     = mkRegex "^import\\s"
+qualifiedRegex  = mkRegex "\\squalified\\s"
 
-importRegex :: Regex
-importRegex = mkRegex "^import\\s"
+regexErrorMsg :: String -> String
+regexErrorMsg s = s ++ " does not match the import regex! Please raise an issue on the github page quoting what statement it failed on"
 
 qualifiedPadLength :: Int
 qualifiedPadLength = 10
@@ -38,9 +42,15 @@ haskellFormatImport (CommandArguments _ range _ _) = do
   buff     <- vim_get_current_buffer
   allLines <- nvim_buf_get_lines buff (intToInt64 startOfRange) (intToInt64 endOfRange) False
 
-  let allImportLines       = sortImports . filter isImportStatement . zip [LineNumber 1..LineNumber endOfRange] $ allLines
+  let allImportLines       
+        = sortImports 
+        . fmap (\(l,s) -> (l,ImportStatement s)) 
+        . filter isImportStatement 
+        . zip [LineNumber 1..LineNumber endOfRange] 
+        $ allLines
+
       anyImportIsQualified = getQualification allImportLines
-      maxLineLength        = MaxLineLength $ foldr max 0 $ fmap (\(_,s) -> length s) allImportLines
+      maxLineLength        = MaxLineLength $ foldr max 0 $ fmap (\(_,s) -> length $ unImportStatement s) allImportLines
       longestModuleName    = getLongestModuleName allImportLines
 
   mapM_ (formatImportLine buff anyImportIsQualified maxLineLength longestModuleName) allImportLines >> return ()
@@ -48,19 +58,18 @@ haskellFormatImport (CommandArguments _ range _ _) = do
 emptyQualified :: String
 emptyQualified = take qualifiedPadLength $ repeat ' '
 
-getLongestModuleName :: [(LineNumber, String)] -> Int
+getLongestModuleName :: [(LineNumber, ImportStatement)] -> Int
 getLongestModuleName xs 
-  = maximum $ fmap (fromMaybe 0 . getLengthOfModuleName . snd) xs
+  = maximum $ fmap (fromMaybe 0 . getLengthOfModuleName . unImportStatement . snd) xs
 
-formatImportLine :: Buffer -> Qualification -> MaxLineLength -> Int -> (LineNumber, String) -> Neovim env ()
-formatImportLine buff qualifiedImports (MaxLineLength longestImport) longestModuleName (LineNumber lineNo, lineContent) 
+formatImportLine :: Buffer -> Qualification -> MaxLineLength -> Int -> (LineNumber, ImportStatement) -> Neovim env ()
+formatImportLine buff qualifiedImports (MaxLineLength longestImport) longestModuleName (LineNumber lineNo, ImportStatement lineContent) 
   = buffer_set_line buff (intToInt64 lineNo) $ padContent lineContent qualifiedImports longestImport longestModuleName
 
-getQualification :: [(LineNumber, String)] -> Qualification
-getQualification xs = go $ filter isQualified xs
-  where
-    go [] = NotPresent
-    go _  = Present
+getQualification :: [(LineNumber, ImportStatement)] -> Qualification
+getQualification xs = go $ filter isQualified xs where
+  go [] = NotPresent
+  go _  = Present
 
 padContent :: String -> Qualification -> Int -> Int -> String
 padContent content NotPresent longestImport longestModuleName = padAs longestModuleName content
@@ -74,9 +83,7 @@ getLengthOfModuleName s = do
     let match = matchRegex moduleNameRegex s
     case match of
       Just m  -> return $ length .concat $ m
-      Nothing -> error $ s ++ " does not match the import regex!"
-                           ++ " Please raise an issue on the github page"
-                           ++ " quoting what statement it failed on"
+      Nothing -> error $ regexErrorMsg s 
 
 padAs :: Int -> String -> String
 padAs n s =
@@ -84,14 +91,14 @@ padAs n s =
         padDiff    = n - lenModName 
      in mconcat . intersperse (take padDiff (repeat ' ') ++ " as ") $ splitOn " as " s
 
-sortImports :: [(LineNumber, String)] -> [(LineNumber, String)]
-sortImports xs = zip (fmap fst xs) $ sortBy (\a b -> compare (toLower <$> ignoreQualified a) (toLower <$> ignoreQualified b)) (fmap snd xs)
+sortImports :: [(LineNumber, ImportStatement)] -> [(LineNumber, ImportStatement)]
+sortImports xs = zip (fmap fst xs) $ sortBy (\a b -> compare (toLower <$> ignoreQualified (unImportStatement a)) (toLower <$> ignoreQualified (unImportStatement b))) (fmap snd xs)
   where
     ignoreQualified = concat . splitOn "qualified"
 
 isImportStatement :: (LineNumber, String) -> Bool
-isImportStatement (_, s) = maybe False (const True) $ matchRegex importRegex s  
+isImportStatement (_, s) = maybe False (const True) $ matchRegex importRegex s
 
-isQualified :: (LineNumber, String) -> Bool
-isQualified (_, s) = isInfixOf "qualified " s
+isQualified :: (LineNumber, ImportStatement) -> Bool
+isQualified (_, s) = maybe False (const True) $ matchRegex qualifiedRegex (unImportStatement s)
 
