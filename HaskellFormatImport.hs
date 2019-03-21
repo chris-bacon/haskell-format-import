@@ -1,5 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
+
 module HaskellFormatImport (plugin) where
 
 import Neovim
@@ -9,6 +10,4 @@ plugin :: Neovim () NeovimPlugin
 plugin = wrapPlugin Plugin
     { environment = ()
     , exports     = [ $(command' 'haskellFormatImport) ["%", "sync"] ]
-    -- , exports     = [ $(function' 'haskellFormatImport) Sync ]
     }
-
