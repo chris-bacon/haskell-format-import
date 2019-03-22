@@ -1,0 +1,7 @@
+Configuring path-0.6.1...
+Preprocessing library for path-0.6.1..
+Building library for path-0.6.1..
+[1 of 2] Compiling Path.Internal    ( src/Path/Internal.hs, .stack-work/dist/x86_64-linux/Cabal-2.4.0.1/build/Path/Internal.o )
+[2 of 2] Compiling Path             ( src/Path.hs, .stack-work/dist/x86_64-linux/Cabal-2.4.0.1/build/Path.o )
+Installing library in /home/chrisb/.stack/snapshots/x86_64-linux/nightly-2019-03-13/8.6.4/lib/x86_64-linux-ghc-8.6.4/path-0.6.1-BpI66Wh9UouC7R8aS6xKIy
+Registering library for path-0.6.1..

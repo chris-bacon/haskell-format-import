@@ -1,0 +1,70 @@
+
+==================== FINAL INTERFACE ====================
+2019-03-22 22:53:58.855878627 UTC
+
+interface haskell-format-import-0.1.0.0-CGbK7Qb1N5b6FuCSy7hXmN:Paths_haskell_format_import 8064
+  interface hash: 082651bf86f462d66516487e10489ce8
+  ABI hash: 2f533ff5f25117f8218fef45d04177ca
+  export-list hash: 0eabc42f4d905d7c9f09d3869fc40d80
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 2b20641ea72b1fa3442209edea95e42d
+  opt_hash: d0a78e7b344f95c7406be35c9b75e196
+  hpc_hash: 93b885adfe0da089cdf634904fd59f71
+  plugin_hash: ad164012d6b1e14942349d58b1132007
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Paths_haskell_format_import.getBinDir
+  Paths_haskell_format_import.getDataDir
+  Paths_haskell_format_import.getDataFileName
+  Paths_haskell_format_import.getDynLibDir
+  Paths_haskell_format_import.getLibDir
+  Paths_haskell_format_import.getLibexecDir
+  Paths_haskell_format_import.getSysconfDir
+  Paths_haskell_format_import.version
+module dependencies:
+package dependencies: base-4.12.0.0* ghc-prim-0.5.3
+                      integer-gmp-1.0.2.0
+orphans: base-4.12.0.0:GHC.Float base-4.12.0.0:GHC.Base
+family instance modules: base-4.12.0.0:Control.Applicative
+                         base-4.12.0.0:Data.Functor.Const
+                         base-4.12.0.0:Data.Functor.Identity base-4.12.0.0:Data.Monoid
+                         base-4.12.0.0:Data.Semigroup.Internal base-4.12.0.0:Data.Version
+                         base-4.12.0.0:GHC.Generics base-4.12.0.0:GHC.IO.Exception
+import  -/  base-4.12.0.0:Control.Exception 041da5b6267cf6b639ff5716d5b299a9
+import  -/  base-4.12.0.0:Data.Version cc00ee64eb7c4a47da3643a9fa19a88c
+import  -/  base-4.12.0.0:GHC.Base c00b75f0b052d05c55ba6a4dd1c63b26
+import  -/  base-4.12.0.0:GHC.IO 898d4ddbf00eb4732e5f462760aa42ae
+import  -/  base-4.12.0.0:GHC.IO.Exception 450806ae9fed7fcace0a23ab62a9d604
+import  -/  base-4.12.0.0:Prelude 3c779dfd6448bdd8e234c336802c2acb
+import  -/  base-4.12.0.0:System.Environment c54e0d0308e729fdace6bc37aa74bb52
+import  -/  ghc-prim-0.5.3:GHC.Types 57064c9f957b09bc2e360061ad5cae0b
+addDependentFile "/home/chrisb/.stack/programs/x86_64-linux/ghc-8.6.4/lib/ghc-8.6.4/include/ghcversion.h" a0ce8aeb7f525f4d70decd6c1d3ca2dd
+addDependentFile ".stack-work/dist/x86_64-linux/Cabal-2.4.0.1/build/autogen/cabal_macros.h" a8ae68bc7b64dacce9de04e123283d26
+addDependentFile "/usr/include/stdc-predef.h" 64086a4476ea583071277345b423d741
+7163eb6b44f959c5c0d344b7b8814cd0
+  $trModule :: GHC.Types.Module
+7e0472282ec8ef56b717ccea097db9dc
+  getBinDir :: GHC.Types.IO GHC.IO.FilePath
+c98a7fa971153a32da3a259a75f8c0bd
+  getDataDir :: GHC.Types.IO GHC.IO.FilePath
+f5ad841a95d154bcc2f7fe6827253891
+  getDataFileName :: GHC.IO.FilePath -> GHC.Types.IO GHC.IO.FilePath
+5dce90ae6226b7e8feb18a616e07cd9e
+  getDynLibDir :: GHC.Types.IO GHC.IO.FilePath
+dcf16e0f743f1495dcc20e4d425a1fab
+  getLibDir :: GHC.Types.IO GHC.IO.FilePath
+e9152b3ea598bb6dc92a8f287c4cd09a
+  getLibexecDir :: GHC.Types.IO GHC.IO.FilePath
+70a5ea1cf21a4b4853e2d010e7a69745
+  getSysconfDir :: GHC.Types.IO GHC.IO.FilePath
+e91c19c2dd2bb2da2c385498c55bb6ab
+  version :: Data.Version.Version
+trusted: safe
+require own pkg trusted: False
+module header:
+  Nothing
+declaration docs:
+arg docs:
+
