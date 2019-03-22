@@ -47,22 +47,31 @@ getQualification xs = go $ filter isQualified xs where
   go _  = Present
 
 padContent :: String -> Qualification -> Int -> Int -> String
-padContent content NotPresent longestImport longestModuleName = padAs longestModuleName content
+padContent content NotPresent longestImport longestModuleName = padAsOrBrackets longestModuleName content
 padContent content Present longestImport longestModuleName =
   if "qualified" `isInfixOf` content || ("import" ++ emptyQualified) `isInfixOf` content
-     then padAs longestModuleName content
-     else concat $ ("import" ++ emptyQualified) : splitOn "import" (padAs longestModuleName content)
+     then padAsOrBrackets longestModuleName content
+     else concat $ ("import" ++ emptyQualified) : splitOn "import" (padAsOrBrackets longestModuleName content)
 
 getLengthOfModuleName :: String -> Maybe Int
 getLengthOfModuleName s = go $ matchRegex moduleNameRegex s where
   go (Just m ) = return $ length .concat $ m
   go Nothing   = error $ regexErrorMsg s 
 
+padAsOrBrackets :: Int -> String -> String
+padAsOrBrackets n = padAs n . padBrackets n
+
 padAs :: Int -> String -> String
 padAs n s =
     let lenModName = fromMaybe 0 $ getLengthOfModuleName s
         padDiff    = n - lenModName 
-     in mconcat . intersperse (replicate padDiff ' ' ++ " as ") $ splitOn " as " $ removeRedundantWhitespace s
+     in mconcat . intersperse (replicate padDiff ' ' ++ " as ") $ splitOn " as " s
+
+padBrackets :: Int -> String -> String
+padBrackets n s =
+    let lenModName = fromMaybe 0 $ getLengthOfModuleName s
+        padDiff    = n - lenModName 
+     in mconcat . intersperse (replicate padDiff ' ' ++ "(") $ splitOn "(" $ removeRedundantWhitespace s
 
 removeRedundantWhitespace :: String -> String
 removeRedundantWhitespace = mconcat . intersperse " " . words
