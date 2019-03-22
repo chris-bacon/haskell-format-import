@@ -9,8 +9,8 @@ How :fire: is that?!
 ## Install
 
 - You will need to install [nvim-hs](https://github.com/neovimhaskell/nvim-hs).
-- Then copy `HaskellFormatImport` to `~/.config/nvim/nvim-hs/HaskellFormatImport.hs`
-- And copy `HaskellFormatImport/Plugin.hs` to `~/.config/nvim/nvim-hs/HaskellFormatImport/Plugin.hs`
+- Then copy `src/HaskellFormatImport` to `~/.config/nvim/nvim-hs/HaskellFormatImport.hs`
+- And copy `src/HaskellFormatImport/Plugin.hs` to `~/.config/nvim/nvim-hs/HaskellFormatImport/Plugin.hs`
 
 Then add the following code to your `~/.config/nvim/nvim.hs` file,
 
@@ -30,3 +30,7 @@ main = do
 ## Usage
 
 This plugin exposes the `HaskellFormatImport` command which you could map some keybinding to, or invoke directly.
+
+## Tests
+
+To run the tests you can run `stack test`
