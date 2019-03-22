@@ -19,12 +19,12 @@ haskellFormatImport (CommandArguments _ range _ _) = do
   buff     <- vim_get_current_buffer
   allLines <- nvim_buf_get_lines buff (intToInt64 startOfRange) (intToInt64 endOfRange) False
 
-  let allImportLines       
-        = sortImports 
+  let allImportLines
+        = sortImports
         . fmap (\(l,s) -> (l,ImportStatement s)) 
         . filter isImportStatement 
         . zip [LineNumber 1..LineNumber endOfRange] 
-        $ allLines
+        $ nub allLines
 
       anyImportIsQualified = getQualification allImportLines
       maxLineLength        = MaxLineLength $ foldr max 0 $ fmap (\(_,s) -> length $ unImportStatement s) allImportLines
