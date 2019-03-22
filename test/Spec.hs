@@ -3,7 +3,7 @@ module Main where
 import Test.Hspec
 import HaskellFormatImport.Format
 
-main = hspec $
+main = hspec $ do
   describe "padContent" $ do
     it "if input has no qualification or explicit imports, it is handled correctly" $ do
       let content        = "import Data.Text"
@@ -122,3 +122,19 @@ main = hspec $
       let expectedOutput = "import qualified Data.Text   ( pack )"
       padContent content qualification longestImport longestModName `shouldBe` expectedOutput
 
+  describe "isImportStatement for statements that are imports" $ do
+    it "import Data.Text" $ isImportStatement (LineNumber 1, "import Data.Text") `shouldBe` True
+    it "import qualified Data.Text" $ isImportStatement (LineNumber 1, "import qualified Data.Text") `shouldBe` True
+    it "import qualified Data.Text as Text" $ isImportStatement (LineNumber 1, "import qualified Data.Text as Text") `shouldBe` True
+    it "import Data.Text as T" $ isImportStatement (LineNumber 1, "import Data.Text as T") `shouldBe` True
+    it "import Data.Text (split)" $ isImportStatement (LineNumber 1, "import Data.Text (split)") `shouldBe` True
+
+  describe "isImportStatement for statements that are not imports" $ do
+    it "" $ isImportStatement (LineNumber 1, "") `shouldBe` False
+    it "f :: Int -> Int" $ isImportStatement (LineNumber 1, "f :: Int -> Int") `shouldBe` False
+    it "f = length" $ isImportStatement (LineNumber 1, "f = length") `shouldBe` False
+    it "--f = length" $ isImportStatement (LineNumber 1, "--f = length") `shouldBe` False
+    it "data A = A" $ isImportStatement (LineNumber 1, "data A = A") `shouldBe` False
+    it "-- this is a qualified import comment" $ isImportStatement (LineNumber 1, "-- this is a qualified import comment") `shouldBe` False
+    it "-- this is an import comment about qualification" $ isImportStatement (LineNumber 1, "-- this is a an import comment about qualification") `shouldBe` False
+      
