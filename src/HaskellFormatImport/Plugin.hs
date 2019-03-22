@@ -24,7 +24,7 @@ haskellFormatImport (CommandArguments _ range _ _) = do
         . fmap (\(l,s) -> (l,ImportStatement s)) 
         . filter isImportStatement 
         . zip [LineNumber 1..LineNumber endOfRange] 
-        $ nub allLines
+        $ allLines
 
       anyImportIsQualified = getQualification allImportLines
       maxLineLength        = MaxLineLength $ foldr max 0 $ fmap (\(_,s) -> length $ unImportStatement s) allImportLines

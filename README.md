@@ -8,6 +8,13 @@ How :fire: is that?!
 
 ![](haskell-format-import.gif)
 
+## Features
+
+- Sorts alphabetically
+- Aligns on "qualified"
+- Aligns on "as"
+- Aligns on "()"
+
 ## Install
 
 - You will need to install [nvim-hs](https://github.com/neovimhaskell/nvim-hs).
