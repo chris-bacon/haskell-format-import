@@ -11,7 +11,7 @@ import Neovim
 import Neovim.API.String
 import Text.Regex
 
-import HaskellFormatImport.Format
+import HaskellFormatImport.Pad
 
 haskellFormatImport :: CommandArguments -> Neovim env ()
 haskellFormatImport (CommandArguments _ range _ _) = do
@@ -21,18 +21,16 @@ haskellFormatImport (CommandArguments _ range _ _) = do
 
   let allImportLines
         = sortImports
-        . fmap (\(l,s) -> (l,ImportStatement s)) 
+        . fmap (\(l,s) -> (l, ImportStatement s)) 
         . filter isImportStatement 
         . zip [LineNumber 1..LineNumber endOfRange] 
         $ allLines
 
       anyImportIsQualified = getQualification allImportLines
-      maxLineLength        = MaxLineLength $ foldr max 0 $ fmap (\(_,s) -> length $ unImportStatement s) allImportLines
-      longestModuleName    = getLongestModuleName allImportLines
+      longestModuleName    = LongestModuleName $ getLongestModuleName allImportLines
 
-  mapM_ (formatImportLine buff anyImportIsQualified maxLineLength longestModuleName) allImportLines >> return ()
+  mapM_ (formatImportLine buff anyImportIsQualified longestModuleName) allImportLines >> return ()
 
-formatImportLine :: Buffer -> Qualification -> MaxLineLength -> Int -> (LineNumber, ImportStatement) -> Neovim env ()
-formatImportLine buff qualifiedImports (MaxLineLength longestImport) longestModuleName (LineNumber lineNo, ImportStatement lineContent) 
+formatImportLine :: Buffer -> Qualification -> LongestModuleName -> (LineNumber, ImportStatement) -> Neovim env ()
+formatImportLine buff qualifiedImports longestModuleName (LineNumber lineNo, ImportStatement lineContent) 
   = buffer_set_line buff (intToInt64 lineNo) $ padContent lineContent qualifiedImports longestImport longestModuleName
-
