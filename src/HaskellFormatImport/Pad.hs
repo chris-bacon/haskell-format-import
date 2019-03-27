@@ -9,7 +9,7 @@ import Data.List.Split
 import Data.Maybe                 (maybe, fromMaybe)
 import Text.Regex                 (matchRegex)
 
-import HaskellFormatImport.Config (moduleNameRegex, importRegex, regexErrorMsg, qualifiedPadLength)
+import HaskellFormatImport.Config (moduleNameRegex, importRegex, regexErrorMsg, qualifiedPadLength, qualifiedRegex)
 
 -- | Qualification here means one of the imports is a qualified import
 -- It is a property that applies to the whole buffer
@@ -54,7 +54,7 @@ padAsOrBrackets n = pad " as " n . pad "(" n . removeRedundantWhitespace
 
 pad :: String -> Int -> String -> String
 pad this n s =
-    let padDiff = n - (fromMaybe 0 $ getLengthOfModuleName s)
+    let padDiff = n - fromMaybe 0 (getLengthOfModuleName s)
      in mconcat . intersperse (replicate padDiff ' ' ++ this) $ splitOn this s
 
 removeRedundantWhitespace :: String -> String

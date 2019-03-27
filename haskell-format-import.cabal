@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e036b3368791c2b7376405953d1d986d776dc0bf012f5350a878d389a4098f31
+-- hash: 69ca468e0f9f271d0a66a7dd8e3b051d19d553b553e593ce99e8ddad07b94fec
 
 name:           haskell-format-import
 version:        0.1.0.0
@@ -26,7 +26,8 @@ source-repository head
 library
   exposed-modules:
       HaskellFormatImport
-      HaskellFormatImport.Format
+      HaskellFormatImport.Config
+      HaskellFormatImport.Pad
       HaskellFormatImport.Plugin
   other-modules:
       Paths_haskell_format_import

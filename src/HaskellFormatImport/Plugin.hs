@@ -33,4 +33,4 @@ haskellFormatImport (CommandArguments _ range _ _) = do
 
 formatImportLine :: Buffer -> Qualification -> LongestModuleName -> (LineNumber, ImportStatement) -> Neovim env ()
 formatImportLine buff qualifiedImports longestModuleName (LineNumber lineNo, ImportStatement lineContent) 
-  = buffer_set_line buff (intToInt64 lineNo) $ padContent lineContent qualifiedImports longestImport longestModuleName
+  = buffer_set_line buff (intToInt64 lineNo) $ padContent lineContent qualifiedImports longestModuleName
