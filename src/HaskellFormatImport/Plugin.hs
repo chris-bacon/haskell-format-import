@@ -1,17 +1,14 @@
-{-# LANGUAGE OverloadedStrings #-}
+module HaskellFormatImport.Plugin (haskellFormatImport) where
 
-module HaskellFormatImport.Plugin ( haskellFormatImport ) where
-
-import Basement.IntegralConv (intToInt64)
+import Basement.IntegralConv   (intToInt64)
 import Data.Char
 import Data.List
 import Data.List.Split
-import Data.Maybe            (maybe, fromMaybe)
+import Data.Maybe              (maybe, fromMaybe)
+import HaskellFormatImport.Pad
 import Neovim
 import Neovim.API.String
 import Text.Regex
-
-import HaskellFormatImport.Pad
 
 haskellFormatImport :: CommandArguments -> Neovim env ()
 haskellFormatImport (CommandArguments _ range _ _) = do
