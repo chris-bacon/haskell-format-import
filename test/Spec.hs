@@ -1,7 +1,7 @@
 module Main where
 
 import Test.Hspec
-import HaskellFormatImport.Format
+import HaskellFormatImport.Pad
 
 main = hspec $ do
   describe "padContent" $ do
