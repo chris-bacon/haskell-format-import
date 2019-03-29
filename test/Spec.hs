@@ -29,6 +29,14 @@ main = hspec $ do
       let expectedOutput = "import qualified Data.Text"
       padContent content qualification longestModName `shouldBe` expectedOutput
 
+    it "if imports need to be padded for qualification, but the input string is already contained qualified and as, then as is indented sufficiently" $ do
+      let content        = "import qualified Data.Text as Text"
+          qualification  = Present
+          longestModName = LongestModuleName 10
+
+      let expectedOutput = "import qualified Data.Text  as Text"
+      padContent content qualification longestModName `shouldBe` expectedOutput
+
     it "if input contains as import, then that is handled" $ do
       let content        = "import Data.Text as Text"
           qualification  = NotPresent
