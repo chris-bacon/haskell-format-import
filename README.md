@@ -20,7 +20,7 @@ How :fire: :fire: :fire: is that?!
 - You will need to install [nvim-hs](https://github.com/neovimhaskell/nvim-hs).
 - Then 
 ```
-cp src/HaskellFormatImport ~/.config/nvim/nvim-hs/HaskellFormatImport.hs
+cp src/HaskellFormatImport.hs ~/.config/nvim/nvim-hs/HaskellFormatImport.hs
 cp src/HaskellFormatImport/Plugin.hs ~/.config/nvim/nvim-hs/HaskellFormatImport/Plugin.hs
 ```
 
