@@ -1,6 +1,6 @@
 # haskell-format-import
 
-[![Build Status](https://travis-ci.com/chris-bacon/haskell-format-import.svg?branch=master)](https://travis-ci.com/exosphere-lang/compiler)
+[![Build Status](https://travis-ci.com/chris-bacon/haskell-format-import.svg?branch=master)](https://travis-ci.com/chris-bacon/haskell-format-import)
 
 This is a neovim plugin that formats your Haskell import statements, and **it is itself written in Haskell!**
 
